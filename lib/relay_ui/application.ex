@@ -11,7 +11,9 @@ defmodule RelayUi.Application do
       # Start the Ecto repository
       RelayUi.Repo,
       # Start the endpoint when the application starts
-      RelayUiWeb.Endpoint
+      RelayUiWeb.Endpoint,
+      # Start relay genserver
+      RelayUi.Relay
       # Starts a worker by calling: RelayUi.Worker.start_link(arg)
       # {RelayUi.Worker, arg},
     ]

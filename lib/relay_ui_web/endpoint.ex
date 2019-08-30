@@ -1,6 +1,8 @@
 defmodule RelayUiWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :relay_ui
 
+  socket "/live", Phoenix.LiveView.Socket
+
   socket "/socket", RelayUiWeb.UserSocket,
     websocket: true,
     longpoll: false

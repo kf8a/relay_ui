@@ -15,6 +15,7 @@ config :relay_ui, RelayUiWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "r8DdBy6tjBFiQooYjCxccXkivh16EivmR/EoHlEyY7N6jDMX4G4BkoBbRcpQGs0t",
   render_errors: [view: RelayUiWeb.ErrorView, accepts: ~w(html json)],
+  live_view: [ signing_salt: "WIyhMrwgbsn0hnvwkuqcGaodOsxadvGW"],
   pubsub: [name: RelayUi.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger

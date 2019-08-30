@@ -1,11 +1,11 @@
-defmodule Relay do
+defmodule RelayUi.Relay do
   @moduledoc """
   Documentation for Relay.
   """
 
   use GenServer
 
-  def start_link() do
+  def start_link(_) do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
@@ -27,6 +27,10 @@ defmodule Relay do
 
   def status(pid, relay) do
     GenServer.call(pid, {:relay_state, relay})
+  end
+
+  def list(pid) do
+    GenServer.call(pid, :list)
   end
 
   def init(_) do
@@ -56,11 +60,15 @@ defmodule Relay do
     {:reply, IcpDas.state(state[:icp], Integer.to_string(relay)), state}
   end
 
+  def handle_call(:list, _from, state) do
+    {:reply, state[:chambers], state}
+  end
+
   def handle_cast({:close, chamber}, state) do
     {:ok, the_chamber} = Map.fetch(state[:chambers], chamber)
     IO.inspect chamber
     IO.inspect the_chamber
-    GenServer.cast(self, {:on, the_chamber["lid"]})
+    GenServer.cast(self(), {:on, the_chamber["lid"]})
     # TODO  update the data
     {:noreply, state}
   end
@@ -82,7 +90,7 @@ defmodule Relay do
   end
 
   defp load_relay_file() do
-    {:ok, data} = File.read(Path.join(:code.priv_dir(:relay), "relay.toml"))
+    {:ok, data} = File.read(Path.join(:code.priv_dir(:relay_ui), "relay.toml"))
     {:ok, chamber} = Toml.decode(data)
     chamber
   end

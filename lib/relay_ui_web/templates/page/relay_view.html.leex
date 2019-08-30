@@ -1,0 +1,17 @@
+<div class="container">
+  <%= for {key, value} <- @relay_list do %>
+  <div class="inline">
+    <%= key %>
+    <%= if value == :on do %>
+    <input checked="checked" id=<%=key%> name="relay[<%= key%>]" type="checkbox" value="on">
+    <% else %>
+    <input id=<%=key%> name="relay[<%= key%>]" type="checkbox" value="off">
+    <% end %>
+    <div>
+      <button class="button button-outline">Lid</button>
+      <button class="button button-outline">Chamber</button>
+      <button class="button button-outline">Sample</button>
+    </div>
+  </div>
+  <% end %>
+</div>
