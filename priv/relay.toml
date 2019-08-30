@@ -1,0 +1,60 @@
+[chamber]
+[chamber.g1-1]
+ sample = 1
+ lid = 2
+ clamp = 3
+
+[chamber.g1-2]
+  sample = 4
+  lid = 5
+  clamp = 6
+
+[chamber.g1-3]
+   sample = 7
+   lid = 8
+   clamp = 9
+
+[chamber.g1-4]
+    sample = 10
+    lid = 11
+    clamp = 12
+
+[chamber.g1-5]
+   sample = 13
+   lid = 14
+   clamp = 15
+
+[chamber.g1-6]
+  sample = 16
+  lid = 17
+  clamp = 18
+
+[chamber.g5-1]
+  sample = 19
+  lid = 20
+  clamp = 21
+
+[chamber.g5-2]
+  sample = 22
+  lid = 23
+  clamp = 24
+
+[chamber.g5-3]
+  sample = 25
+  lid = 26
+  clamp = 27
+
+[chamber.g5-4]
+  sample = 28
+  lid = 29
+  clamp = 30
+
+[chamber.g5-5]
+  sample = 31
+  lid = 32
+  clamp = 33
+
+[chamber.g5-6]
+  sample = 34
+  lid = 35
+  clamp = 36
