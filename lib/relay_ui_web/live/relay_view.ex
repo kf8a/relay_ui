@@ -25,9 +25,7 @@ defmodule RelayUiWeb.RelayView do
     {:noreply, socket}
   end
 
-  def handle_info({Relay, [:relay | relay] , chambers}, socket) do
-    IO.inspect relay
-    IO.inspect chambers
+  def handle_info({Relay, [:relay | _relay] , chambers}, socket) do
     {:noreply, assign(socket, relay_list: chambers)}
   end
 
