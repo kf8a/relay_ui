@@ -15,21 +15,20 @@ defmodule RelayUiWeb.RelayView do
     {:ok, assign(socket, relay_list: relay_hierarchy)}
   end
 
-  def handle_event("on", id, socket) do
-    # Send an 'on' message to the relay with this id
-    Relay.on(Relay, id)
-    IO.inspect "sending on message to #{id}"
+  def handle_event("on", path, socket) do
+    Relay.on(Relay, String.split(path, "."))
     {:noreply, socket}
   end
 
-  def handle_event("off", id, socket) do
-    # Send an 'off' message to the relay with this id
-    IO.inspect "sending off message to #{id}"
+  def handle_event("off", path, socket) do
+    Relay.off(Relay, String.split(path, "."))
     {:noreply, socket}
   end
 
-  def handle_info({Relay, [:relay | _ ] , _ }, socket) do
-    {:noreply, socket}
+  def handle_info({Relay, [:relay | relay] , chambers}, socket) do
+    IO.inspect relay
+    IO.inspect chambers
+    {:noreply, assign(socket, relay_list: chambers)}
   end
 
   defp fetch(socket) do

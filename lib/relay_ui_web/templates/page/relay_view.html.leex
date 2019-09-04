@@ -4,22 +4,31 @@
     <%= key %>
     <input checked="checked" id=<%=key%> name="relay[<%= key%>]" type="checkbox" value="on">
     <div>
-      <%= if value["lid"] == :on do %>
-      <button class="button button-black" phx-click="off"  phx-value="1">
+      <% {_, lid_state} = value["lid"] %>
+      <% {_, clamp_state} = value["clamp"] %>
+      <% {_, sample_state} = value["sample"] %>
+      <%= if lid_state == :on do %>
+      <button class="button button-black" phx-click="off"
+                                          phx-value="<%= key%>.lid">
       <% else %>
-      <button class="button button-outline" phx-click="on" phx-value="1">
+      <button class="button button-outline" phx-click="on"
+                                            phx-value="<%= key%>.lid">
       <% end %>Lid</button>
 
-      <%= if value["clamp"] == :on do %>
-      <button class="button button-black" phx-click="off" phx-value="2">
+      <%= if clamp_state == :on do %>
+      <button class="button button-black" phx-click="off"
+                                          phx-value="<%= key%>.clamp">
       <% else %>
-      <button class="button button-outline" phx-click="on" phx-value="2">
+      <button class="button button-outline" phx-click="on"
+                                            phx-value="<%= key%>.clamp">
       <% end %>Clamp</button>
 
-      <%= if value["sample"] == :on do %>
-      <button class="button button-black" phx-click="off" phx-value="3">
+      <%= if sample_state == :on do %>
+      <button class="button button-black" phx-click="off"
+                                          phx-value="<%=key%>.sample">
       <% else %>
-      <button class="button button-outline" phx-click="on" phx-value="3">
+      <button class="button button-outline" phx-click="on"
+                                            phx-value="<%= key%>.sample">
       <% end %>Sample</button>
     </div>
   </div>

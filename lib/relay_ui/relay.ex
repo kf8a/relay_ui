@@ -87,19 +87,31 @@ defmodule RelayUi.Relay do
   end
 
   def handle_cast({:on, relay}, state) do
+    # look up the relay id
     # IcpDas.on(state[:icp], Integer.to_string(relay))
     {_old, relays} = Map.get_and_update(state[:relays], relay, fn current -> {current, :on} end)
-    Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], relays})
-    {:noreply, Map.put(state, :relays, relays)}
+    new_chambers = update_in(state[:chambers], relay, fn({key, value}) -> {key, :on} end)
+    Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], new_chambers})
+    new_state = state
+                |> Map.put(:relays, relays)
+                |> Map.put(:chambers, new_chambers)
+
+    {:noreply, new_state}
   end
 
   def handle_cast({:off, relay}, state) do
+    # look up the relay id
     # IcpDas.off(state[:icp], Integer.to_string(relay))
     # This could probably be done with update_in
     {_old, relays} = Map.get_and_update(state[:relays], relay, fn current -> {current, :off} end)
-    Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], relays})
+    new_chambers = update_in(state[:chambers], relay, fn({key, value}) -> {key, :off} end)
+    Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], new_chambers})
 
-    {:noreply, Map.put(state, :relays, relays)}
+    new_state = state
+                |> Map.put(:relays, relays)
+                |> Map.put(:chambers, new_chambers)
+
+    {:noreply, new_state}
   end
 
   defp extract_relays(chambers) do
