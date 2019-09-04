@@ -3,6 +3,8 @@ defmodule RelayUi.Relay do
   Documentation for Relay.
   """
 
+  @topic inspect(__MODULE__)
+
   use GenServer
 
   def start_link(_) do
@@ -29,8 +31,16 @@ defmodule RelayUi.Relay do
     GenServer.call(pid, {:relay_state, relay})
   end
 
+  def status(pid) do
+    GenServer.call(pid, :relay_state)
+  end
+
   def list(pid) do
     GenServer.call(pid, :list)
+  end
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(RelayUi.PubSub, @topic)
   end
 
   def init(_) do
@@ -41,12 +51,15 @@ defmodule RelayUi.Relay do
   def handle_continue(:load_relay_mapping, state) do
     chambers = load_relay_file()
 
+    IO.inspect chambers
     relays = extract_relays(chambers)
 
     #TODO set all relays to zero or query relays for current status
+    new_chambers = ammend_chambers(chambers["chamber"])
+
 
     new_state = state
-                |> Map.put(:chambers, chambers["chamber"])
+                |> Map.put(:chambers, new_chambers)
                 |> Map.put(:relays, relays)
 
     {:noreply, new_state}
@@ -60,14 +73,16 @@ defmodule RelayUi.Relay do
     {:reply, IcpDas.state(state[:icp], Integer.to_string(relay)), state}
   end
 
+  def handle_call(:relay_state, _from, state) do
+    {:reply, state[:relays], state}
+  end
+
   def handle_call(:list, _from, state) do
     {:reply, state[:chambers], state}
   end
 
   def handle_cast({:close, chamber}, state) do
     {:ok, the_chamber} = Map.fetch(state[:chambers], chamber)
-    IO.inspect chamber
-    IO.inspect the_chamber
     GenServer.cast(self(), {:on, the_chamber["lid"]})
     # TODO  update the data
     {:noreply, state}
@@ -95,6 +110,10 @@ defmodule RelayUi.Relay do
     chamber
   end
 
+  defp ammend_chambers(chambers) do
+    Enum.map(chambers, fn({key, value}) -> {key, Enum.map(value, fn({key, value1}) -> {key, {value1, :off}} end ) |> Map.new} end) |> Map.new
+  end
+
   defp update_relays(relay_map) do
     relay_map
     |> Enum.each(fn(x) -> update_relay(x) end)
@@ -103,4 +122,10 @@ defmodule RelayUi.Relay do
   defp update_relay({relay, _state}) do
     IO.inspect relay
   end
+
+  defp broadcast_change({:ok, result}, event) do
+    Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, event, result})
+  {:ok, result}
+end
+
 end

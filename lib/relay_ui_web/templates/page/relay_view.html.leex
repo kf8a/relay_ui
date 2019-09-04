@@ -2,15 +2,25 @@
   <%= for {key, value} <- @relay_list do %>
   <div class="inline">
     <%= key %>
-    <%= if value == :on do %>
     <input checked="checked" id=<%=key%> name="relay[<%= key%>]" type="checkbox" value="on">
-    <% else %>
-    <input id=<%=key%> name="relay[<%= key%>]" type="checkbox" value="off">
-    <% end %>
     <div>
-      <button class="button button-outline">Lid</button>
-      <button class="button button-outline">Chamber</button>
-      <button class="button button-outline">Sample</button>
+      <%= if value["lid"] == :on do %>
+      <button class="button button-black" phx-click="off"  phx-value="1">
+      <% else %>
+      <button class="button button-outline" phx-click="on" phx-value="1">
+      <% end %>Lid</button>
+
+      <%= if value["clamp"] == :on do %>
+      <button class="button button-black" phx-click="off" phx-value="2">
+      <% else %>
+      <button class="button button-outline" phx-click="on" phx-value="2">
+      <% end %>Clamp</button>
+
+      <%= if value["sample"] == :on do %>
+      <button class="button button-black" phx-click="off" phx-value="3">
+      <% else %>
+      <button class="button button-outline" phx-click="on" phx-value="3">
+      <% end %>Sample</button>
     </div>
   </div>
   <% end %>

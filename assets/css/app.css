@@ -4,3 +4,9 @@
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
 
 .inline { display: inline-block }
+
+/* Custom color */
+.button-black {
+  background-color: black;
+  border-color: black;
+}
