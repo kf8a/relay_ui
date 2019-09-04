@@ -15,24 +15,16 @@ defmodule RelayUi.Relay do
     GenServer.call(pid, {:lookup, chamber})
   end
 
-  def close_lid(pid, chamber) do
-    GenServer.cast(pid, {:close, chamber})
+  def on(pid, relay_path) do
+    GenServer.cast(pid, {:on, relay_path})
   end
 
-  def on(pid, relay_number) do
-    GenServer.cast(pid, {:on, relay_number})
-  end
-
-  def off(pid, relay_number) do
-    GenServer.cast(pid, {:off, relay_number})
+  def off(pid, relay_path) do
+    GenServer.cast(pid, {:off, relay_path})
   end
 
   def status(pid, relay) do
     GenServer.call(pid, {:relay_state, relay})
-  end
-
-  def status(pid) do
-    GenServer.call(pid, :relay_state)
   end
 
   def list(pid) do
@@ -51,16 +43,10 @@ defmodule RelayUi.Relay do
   def handle_continue(:load_relay_mapping, state) do
     chambers = load_relay_file()
 
-    relays = extract_relays(chambers)
-
     #TODO set all relays to zero or query relays for current status
     new_chambers = ammend_chambers(chambers["chamber"])
 
-    new_state = state
-                |> Map.put(:chambers, new_chambers)
-                |> Map.put(:relays, relays)
-
-    {:noreply, new_state}
+    {:noreply, Map.put(state, :chambers, new_chambers) }
   end
 
   def handle_call({:lookup, chamber}, _from, state) do
@@ -68,22 +54,12 @@ defmodule RelayUi.Relay do
   end
 
   def handle_call({:relay_state, relay}, _from, state) do
+    # TODO this needs to translate to a chamber array
     {:reply, IcpDas.state(state[:icp], Integer.to_string(relay)), state}
-  end
-
-  def handle_call(:relay_state, _from, state) do
-    {:reply, state[:relays], state}
   end
 
   def handle_call(:list, _from, state) do
     {:reply, state[:chambers], state}
-  end
-
-  def handle_cast({:close, chamber}, state) do
-    {:ok, the_chamber} = Map.fetch(state[:chambers], chamber)
-    GenServer.cast(self(), {:on, the_chamber["lid"]})
-    # TODO  update the data
-    {:noreply, state}
   end
 
   def handle_cast({:on, path}, state) do
@@ -91,36 +67,21 @@ defmodule RelayUi.Relay do
     {relay, _state} = get_in(state[:chambers], path)
 
     # IcpDas.on(state[:icp], Integer.to_string(relay))
-    {_old, relays} = Map.get_and_update(state[:relays], relay, fn current -> {current, :on} end)
     new_chambers = update_in(state[:chambers], path, fn({key, value}) -> {key, :on} end)
     Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], new_chambers})
-    new_state = state
-                |> Map.put(:relays, relays)
-                |> Map.put(:chambers, new_chambers)
 
-    {:noreply, new_state}
+    {:noreply, Map.put(state,:chambers, new_chambers)}
   end
 
   def handle_cast({:off, path}, state) do
     # look up the relay id
     {relay, _state} = get_in(state[:chambers], path)
-    IO.inspect relay
 
     # IcpDas.off(state[:icp], Integer.to_string(relay))
-    # This could probably be done with update_in
-    {_old, relays} = Map.get_and_update(state[:relays], relay, fn current -> {current, :off} end)
     new_chambers = update_in(state[:chambers], path, fn({key, value}) -> {key, :off} end)
     Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], new_chambers})
 
-    new_state = state
-                |> Map.put(:relays, relays)
-                |> Map.put(:chambers, new_chambers)
-
-    {:noreply, new_state}
-  end
-
-  defp extract_relays(chambers) do
-    chambers["chamber"] |> Enum.map(fn({_key, x})-> x end ) |> Enum.flat_map(fn(x) -> Enum.map(x, fn({_key,y}) -> {y, :off} end) end) |> Map.new
+    {:noreply, Map.put(state, :chambers, new_chambers) }
   end
 
   defp load_relay_file() do
@@ -133,18 +94,9 @@ defmodule RelayUi.Relay do
     Enum.map(chambers, fn({key, value}) -> {key, Enum.map(value, fn({key, value1}) -> {key, {value1, :off}} end ) |> Map.new} end) |> Map.new
   end
 
-  defp update_relays(relay_map) do
-    relay_map
-    |> Enum.each(fn(x) -> update_relay(x) end)
-  end
-
-  defp update_relay({relay, _state}) do
-    IO.inspect relay
-  end
-
   defp broadcast_change({:ok, result}, event) do
     Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, event, result})
-  {:ok, result}
-end
+    {:ok, result}
+  end
 
 end

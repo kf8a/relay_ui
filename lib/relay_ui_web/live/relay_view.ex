@@ -10,7 +10,6 @@ defmodule RelayUiWeb.RelayView do
   def mount(_session, socket) do
     Relay.subscribe()
     relay_hierarchy = Relay.list(RelayUi.Relay)
-    relay_state = Relay.status(RelayUi.Relay)
 
     {:ok, assign(socket, relay_list: relay_hierarchy)}
   end
