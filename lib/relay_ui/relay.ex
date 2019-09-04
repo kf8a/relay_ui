@@ -51,12 +51,10 @@ defmodule RelayUi.Relay do
   def handle_continue(:load_relay_mapping, state) do
     chambers = load_relay_file()
 
-    IO.inspect chambers
     relays = extract_relays(chambers)
 
     #TODO set all relays to zero or query relays for current status
     new_chambers = ammend_chambers(chambers["chamber"])
-
 
     new_state = state
                 |> Map.put(:chambers, new_chambers)
@@ -89,14 +87,18 @@ defmodule RelayUi.Relay do
   end
 
   def handle_cast({:on, relay}, state) do
-    IcpDas.on(state[:icp], Integer.to_string(relay))
+    # IcpDas.on(state[:icp], Integer.to_string(relay))
     {_old, relays} = Map.get_and_update(state[:relays], relay, fn current -> {current, :on} end)
+    Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], relays})
     {:noreply, Map.put(state, :relays, relays)}
   end
 
   def handle_cast({:off, relay}, state) do
-    IcpDas.off(state[:icp], Integer.to_string(relay))
+    # IcpDas.off(state[:icp], Integer.to_string(relay))
+    # This could probably be done with update_in
     {_old, relays} = Map.get_and_update(state[:relays], relay, fn current -> {current, :off} end)
+    Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], relays})
+
     {:noreply, Map.put(state, :relays, relays)}
   end
 

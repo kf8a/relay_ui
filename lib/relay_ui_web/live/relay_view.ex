@@ -28,7 +28,11 @@ defmodule RelayUiWeb.RelayView do
     {:noreply, socket}
   end
 
-  def handle_event({Relay, [:relay | _ ] , _ }, socket) do
+  def handle_info({Relay, [:relay | _ ] , _ }, socket) do
     {:noreply, socket}
+  end
+
+  defp fetch(socket) do
+    assign(socket, relays: Relay.list())
   end
 end
