@@ -43,7 +43,7 @@ defmodule RelayUi.Relay do
   def handle_continue(:load_relay_mapping, state) do
     chambers = load_relay_file()
 
-    new_chambers = ammend_chambers(chambers["chamber"])
+    new_chambers = ammend_chambers(chambers["chamber"], state[:icp])
 
     {:noreply, Map.put(state, :chambers, new_chambers) }
   end
@@ -89,8 +89,8 @@ defmodule RelayUi.Relay do
     chamber
   end
 
-  defp ammend_chambers(chambers) do
-    Enum.map(chambers, fn({key, value}) -> {key, Enum.map(value, fn({key, value1}) -> {key, {value1, status(value1)}} end ) |> Map.new} end) |> Map.new
+  defp ammend_chambers(chambers, icp) do
+    Enum.map(chambers, fn({key, value}) -> {key, Enum.map(value, fn({key, value1}) -> {key, {value1, relay_status(value1, icp)}} end ) |> Map.new} end) |> Map.new
   end
 
   defp broadcast_change({:ok, result}, event) do
@@ -98,8 +98,8 @@ defmodule RelayUi.Relay do
     {:ok, result}
   end
 
-  defp status(relay) do
-    IcpDas.state(IcpDas, Integer.to_string(relay))
+  defp relay_status(relay, icp) do
+    IcpDas.state(icp, Integer.to_string(relay))
   end
 
 end
