@@ -28,7 +28,4 @@ defmodule RelayUiWeb.RelayView do
     {:noreply, assign(socket, relay_list: chambers)}
   end
 
-  defp fetch(socket) do
-    assign(socket, relays: Relay.list())
-  end
 end

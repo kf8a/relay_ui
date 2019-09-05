@@ -43,7 +43,6 @@ defmodule RelayUi.Relay do
   def handle_continue(:load_relay_mapping, state) do
     chambers = load_relay_file()
 
-    #TODO set all relays to zero or query relays for current status
     new_chambers = ammend_chambers(chambers["chamber"])
 
     {:noreply, Map.put(state, :chambers, new_chambers) }
@@ -67,7 +66,7 @@ defmodule RelayUi.Relay do
     {relay, _state} = get_in(state[:chambers], path)
 
     IcpDas.on(state[:icp], Integer.to_string(relay))
-    new_chambers = update_in(state[:chambers], path, fn({key, value}) -> {key, :on} end)
+    new_chambers = update_in(state[:chambers], path, fn({key, _value}) -> {key, :on} end)
     Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], new_chambers})
 
     {:noreply, Map.put(state,:chambers, new_chambers)}
@@ -78,7 +77,7 @@ defmodule RelayUi.Relay do
     {relay, _state} = get_in(state[:chambers], path)
 
     IcpDas.off(state[:icp], Integer.to_string(relay))
-    new_chambers = update_in(state[:chambers], path, fn({key, value}) -> {key, :off} end)
+    new_chambers = update_in(state[:chambers], path, fn({key, _value}) -> {key, :off} end)
     Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], new_chambers})
 
     {:noreply, Map.put(state, :chambers, new_chambers) }
@@ -91,12 +90,16 @@ defmodule RelayUi.Relay do
   end
 
   defp ammend_chambers(chambers) do
-    Enum.map(chambers, fn({key, value}) -> {key, Enum.map(value, fn({key, value1}) -> {key, {value1, :off}} end ) |> Map.new} end) |> Map.new
+    Enum.map(chambers, fn({key, value}) -> {key, Enum.map(value, fn({key, value1}) -> {key, {value1, status(value1)}} end ) |> Map.new} end) |> Map.new
   end
 
   defp broadcast_change({:ok, result}, event) do
     Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, event, result})
     {:ok, result}
+  end
+
+  defp status(relay) do
+    IcpDas.state(IcpDas, Integer.to_string(relay))
   end
 
 end
