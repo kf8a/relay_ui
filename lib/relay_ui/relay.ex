@@ -65,7 +65,7 @@ defmodule RelayUi.Relay do
     # look up the relay id
     {relay, _state} = get_in(state[:chambers], path)
 
-    # IcpDas.on(state[:icp], Integer.to_string(relay))
+    IcpDas.on(state[:icp], Integer.to_string(relay))
     new_chambers = update_in(state[:chambers], path, fn({key, _value}) -> {key, :on} end)
     Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], new_chambers})
 
@@ -76,7 +76,7 @@ defmodule RelayUi.Relay do
     # look up the relay id
     {relay, _state} = get_in(state[:chambers], path)
 
-    # IcpDas.off(state[:icp], Integer.to_string(relay))
+    IcpDas.off(state[:icp], Integer.to_string(relay))
     new_chambers = update_in(state[:chambers], path, fn({key, _value}) -> {key, :off} end)
     Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], new_chambers})
 
@@ -99,8 +99,7 @@ defmodule RelayUi.Relay do
   end
 
   defp relay_status(relay, icp) do
-    # IcpDas.state(icp, Integer.to_string(relay))
-    :off
+    IcpDas.state(icp, Integer.to_string(relay))
   end
 
 end
