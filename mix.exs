@@ -44,7 +44,8 @@ defmodule RelayUi.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:phoenix_live_view, "~> 0.1.0"},
-      {:icp_das, github: "kf8a/icp_das"}
+      {:icp_das, github: "kf8a/icp_das"},
+      {:bamboo, "~> 1.3"}
     ]
   end
 

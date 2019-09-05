@@ -1,0 +1,6 @@
+<p>Hello!</p>
+
+<p>Use the link below to log in to your GasHog account. <strong>This link expires in 15 minutes.</strong></p>
+
+<p><%= link "Log in to GasHog", to: Routes.login_request_url(RelayUiWeb.Endpoint, :show, @token) %></p>
+

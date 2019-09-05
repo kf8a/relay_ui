@@ -1,0 +1,7 @@
+<div class="container">
+<%= if logged_in?(@conn) do %>
+  <%= link "Log out", to: Routes.session_path(@conn, :delete), method: :delete %>
+  <% else %>
+<%= link "Log in", to: Routes.login_request_path(@conn, :new) %>
+<% end %>
+</div>

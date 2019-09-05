@@ -75,3 +75,6 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Use local adapter for development
+config :relay_ui, RelayUi.Mailer, adapter: Bamboo.LocalAdapter
