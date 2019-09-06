@@ -24,7 +24,7 @@ defmodule RelayUiWeb.Router do
     get "/admin", PageController, :admin
 
     resources "/login-requests", LoginRequestController, only: [:create, :new, :show], param: "token"
-    resources "/essions", SessionController, only: [:delete], singleton: true
+    resources "/sessions", SessionController, only: [:delete], singleton: true
   end
 
   # Other scopes may use custom stacks.
