@@ -10,7 +10,7 @@ defmodule RelayUiWeb.SessionController do
     do
       log_out(conn)
     else
-      nill -> log_out(conn)
+      nil -> log_out(conn)
     end
   end
 
