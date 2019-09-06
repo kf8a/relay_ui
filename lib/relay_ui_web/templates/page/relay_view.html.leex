@@ -1,4 +1,6 @@
+
 <div class="container">
+  <%= live_link "Log out", to: Routes.session_path(@socket, :delete), method: :delete %>
   <%= for {key, value} <- @relay_list do %>
   <div class="inline">
     <%= key %>
