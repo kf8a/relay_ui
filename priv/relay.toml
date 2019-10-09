@@ -58,3 +58,21 @@
   sample = 34
   lid = 35
   clamp = 36
+
+[valve.1]
+  name = "to icos valve 1"
+  relay = 37
+
+[valve.2]
+  name = "from icos valve 2"
+  relay = 38
+
+[valve.3]
+  name = "To NOX valve 3"
+  relay = 39
+
+[relay.4]
+  name = "from icos valve 2"
+  relay = 40
+
+
