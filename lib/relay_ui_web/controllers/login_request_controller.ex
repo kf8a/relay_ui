@@ -5,7 +5,6 @@ defmodule RelayUiWeb.LoginRequestController do
   alias RelayUi.Email
   alias RelayUi.Mailer
 
-
   def new(conn, _params) do
     render(conn, "new.html")
   end

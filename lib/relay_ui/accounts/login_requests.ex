@@ -13,6 +13,7 @@ defmodule RelayUi.Accounts.LoginRequests do
         |> Multi.delete_all(:delete_login_requests, Ecto.assoc(user, :login_request))
         |> Multi.insert(:login_request, Ecto.build_assoc(user, :login_request))
         |> Repo.transaction()
+
       {:ok, changes, user}
     else
       nil -> {:error, :not_found}
@@ -22,8 +23,7 @@ defmodule RelayUi.Accounts.LoginRequests do
   def redeem(token) do
     with {:ok, id} <- Tokens.verify_login_request(token),
          login_request when not is_nil(login_request) <- Repo.get(LoginRequest, id),
-         %{user: user} <- Repo.preload(login_request, :user)
-    do
+         %{user: user} <- Repo.preload(login_request, :user) do
       Multi.new()
       |> Multi.delete_all(:delete_login_requests, Ecto.assoc(user, :login_request))
       |> Multi.insert(:session, Ecto.build_assoc(user, :sessions))
@@ -31,7 +31,8 @@ defmodule RelayUi.Accounts.LoginRequests do
     else
       nil ->
         {:error, :not_found}
-    {:error, :expired} ->
+
+      {:error, :expired} ->
         {:error, :expired}
     end
   end

@@ -4,8 +4,7 @@ defmodule RelayUiWeb.AuthHelper do
 
   def logged_in?(conn) do
     with session_id when not is_nil(session_id) <- Conn.get_session(conn, :session_id),
-         session when not is_nil(session) <- Sessions.get(session_id)
-    do
+         session when not is_nil(session) <- Sessions.get(session_id) do
       true
     else
       nil -> false

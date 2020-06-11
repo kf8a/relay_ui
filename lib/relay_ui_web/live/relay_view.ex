@@ -7,7 +7,7 @@ defmodule RelayUiWeb.RelayView do
     RelayUiWeb.PageView.render("relay_view.html", assigns)
   end
 
-  def mount(_session, socket) do
+  def mount(_params, _session, socket) do
     Relay.subscribe()
     relay_hierarchy = Relay.list(RelayUi.Relay)
 
@@ -24,8 +24,7 @@ defmodule RelayUiWeb.RelayView do
     {:noreply, socket}
   end
 
-  def handle_info({Relay, [:relay | _relay] , chambers}, socket) do
+  def handle_info({Relay, [:relay | _relay], chambers}, socket) do
     {:noreply, assign(socket, relay_list: chambers)}
   end
-
 end

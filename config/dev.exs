@@ -2,7 +2,7 @@ use Mix.Config
 
 # Configure your database
 config :relay_ui, RelayUi.Repo,
-  username: "postgres",
+  username: "pi",
   password: "postgres",
   database: "relay_ui_dev",
   hostname: "localhost",
@@ -77,4 +77,9 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 # Use local adapter for development
-config :relay_ui, RelayUi.Mailer, adapter: Bamboo.LocalAdapter
+# config :relay_ui, RelayUi.Mailer, adapter: Bamboo.LocalAdapter
+config :relay_ui, RelayUi.Mailer,
+  adapter: Bamboo.SMTPAdapter,
+  server: "localhost",
+  hostname: "gashog.kbs.msu.edu",
+  port: 25

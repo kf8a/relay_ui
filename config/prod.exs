@@ -10,7 +10,7 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :relay_ui, RelayUiWeb.Endpoint,
-  url: [host: "example.com", port: 80],
+  url: [host: "gashog.kbs.msu.edu", port: 4000],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -62,4 +62,11 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
+
+config :relay_ui, RelayUi.Mailer,
+  adapter: Bamboo.SMTPAdapter,
+  server: "localhost",
+  hostname: "gashog.kbs.msu.edu",
+  port: 25
+
 import_config "prod.secret.exs"

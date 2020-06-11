@@ -25,7 +25,7 @@ defmodule RelayUiWeb do
       import RelayUiWeb.Gettext
       alias RelayUiWeb.Router.Helpers, as: Routes
 
-			import Phoenix.LiveView.Controller, only: [live_render: 3]
+      import Phoenix.LiveView.Controller
     end
   end
 
@@ -44,9 +44,7 @@ defmodule RelayUiWeb do
       import RelayUiWeb.ErrorHelpers
       import RelayUiWeb.Gettext
       alias RelayUiWeb.Router.Helpers, as: Routes
-
-			import Phoenix.LiveView, only: [live_render: 2, live_render: 3, live_link: 1, live_link: 2]
-
+      import Phoenix.LiveView.Helpers
       import RelayUiWeb.AuthHelper
     end
   end
@@ -57,7 +55,7 @@ defmodule RelayUiWeb do
       import Plug.Conn
       import Phoenix.Controller
 
-			import Phoenix.LiveView.Router
+      import Phoenix.LiveView.Router
     end
   end
 

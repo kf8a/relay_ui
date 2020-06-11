@@ -3,6 +3,8 @@ defmodule RelayUiWeb.PageController do
   alias Phoenix.LiveView
   alias RelayUiWeb.AuthHelper
 
+  import Phoenix.LiveView.Controller
+
   # plug :authenticate
 
   def index(conn, _params) do
@@ -11,13 +13,14 @@ defmodule RelayUiWeb.PageController do
 
   def admin(conn, _params) do
     authenticate(conn)
-    LiveView.Controller.live_render(conn, RelayUiWeb.RelayView, session: %{})
+    live_render(conn, RelayUiWeb.RelayView, session: %{})
   end
 
   defp authenticate(conn) do
     case AuthHelper.logged_in?(conn) do
       true ->
         conn
+
       false ->
         conn |> put_flash(:info, "You must be logged in") |> redirect(to: "/") |> halt()
     end

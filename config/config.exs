@@ -12,11 +12,11 @@ config :relay_ui,
 
 # Configures the endpoint
 config :relay_ui, RelayUiWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "gashog.kbs.msu.edu", port: 4000],
   secret_key_base: "r8DdBy6tjBFiQooYjCxccXkivh16EivmR/EoHlEyY7N6jDMX4G4BkoBbRcpQGs0t",
   render_errors: [view: RelayUiWeb.ErrorView, accepts: ~w(html json)],
-  live_view: [ signing_salt: "WIyhMrwgbsn0hnvwkuqcGaodOsxadvGW"],
-  pubsub: [name: RelayUi.PubSub, adapter: Phoenix.PubSub.PG2]
+  live_view: [signing_salt: "WIyhMrwgbsn0hnvwkuqcGaodOsxadvGW"],
+  pubsub_server: RelayUi.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,

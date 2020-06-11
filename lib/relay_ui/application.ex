@@ -10,6 +10,8 @@ defmodule RelayUi.Application do
     children = [
       # Start the Ecto repository
       RelayUi.Repo,
+      # Start PubSub system
+      {Phoenix.PubSub, name: RelayUi.PubSub},
       # Start the endpoint when the application starts
       RelayUiWeb.Endpoint,
       # Start relay genserver
