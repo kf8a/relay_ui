@@ -8,7 +8,8 @@
 use Mix.Config
 
 config :relay_ui,
-  ecto_repos: [RelayUi.Repo]
+  ecto_repos: [RelayUi.Repo],
+  testing: true
 
 # Configures the endpoint
 config :relay_ui, RelayUiWeb.Endpoint,
@@ -25,6 +26,7 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
