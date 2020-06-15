@@ -41,7 +41,7 @@ defmodule RelayUi.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.1"},
+      {:plug_cowboy, "~> 2.3"},
       {:phoenix_live_view, "~> 0.13.3"},
       {:icp_das, github: "kf8a/icp_das"},
       {:bamboo, "~> 1.3"},
