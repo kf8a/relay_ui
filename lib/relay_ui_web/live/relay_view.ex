@@ -14,12 +14,12 @@ defmodule RelayUiWeb.RelayView do
     {:ok, assign(socket, relay_list: relay_hierarchy)}
   end
 
-  def handle_event("on", path, socket) do
+  def handle_event("on", %{"relay" => path}, socket) do
     Relay.on(Relay, String.split(path, "."))
     {:noreply, socket}
   end
 
-  def handle_event("off", path, socket) do
+  def handle_event("off", %{"relay" => path}, socket) do
     Relay.off(Relay, String.split(path, "."))
     {:noreply, socket}
   end

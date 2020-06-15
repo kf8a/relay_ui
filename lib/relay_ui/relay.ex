@@ -36,7 +36,7 @@ defmodule RelayUi.Relay do
   end
 
   def init(_) do
-    {:ok, icp} = IcpDas.start_link()
+    {:ok, icp} = IcpDas.start_link("ttyUSB1")
     {:ok, %{icp: icp}, {:continue, :load_relay_mapping}}
   end
 

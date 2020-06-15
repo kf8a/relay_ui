@@ -10,26 +10,26 @@
       <% {_, sample_state} = value["sample"] %>
       <%= if lid_state == :on do %>
       <button class="button button-black" phx-click="off"
-                                          phx-value="<%= key%>.lid">
+                                          phx-value-relay="<%= key%>.lid">
       <% else %>
       <button class="button button-outline" phx-click="on"
-                                            phx-value="<%= key%>.lid">
+                                            phx-value-relay="<%= key%>.lid">
       <% end %>Lid</button>
 
       <%= if clamp_state == :on do %>
       <button class="button button-black" phx-click="off"
-                                          phx-value="<%= key%>.clamp">
+                                          phx-value-relay="<%= key%>.clamp">
       <% else %>
       <button class="button button-outline" phx-click="on"
-                                            phx-value="<%= key%>.clamp">
+                                            phx-value-relay="<%= key%>.clamp">
       <% end %>Clamp</button>
 
       <%= if sample_state == :on do %>
       <button class="button button-black" phx-click="off"
-                                          phx-value="<%=key%>.sample">
+                                          phx-value-relay="<%=key%>.sample">
       <% else %>
       <button class="button button-outline" phx-click="on"
-                                            phx-value="<%= key%>.sample">
+                                            phx-value-relay="<%= key%>.sample">
       <% end %>Sample</button>
     </div>
   </div>
