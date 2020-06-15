@@ -25,7 +25,7 @@ defmodule RelayUiWeb do
       import RelayUiWeb.Gettext
       alias RelayUiWeb.Router.Helpers, as: Routes
 
-      import Phoenix.LiveView.Controller
+			import Phoenix.LiveView.Controller
     end
   end
 

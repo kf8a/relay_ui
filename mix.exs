@@ -44,6 +44,7 @@ defmodule RelayUi.MixProject do
       {:plug_cowboy, "~> 2.3"},
       {:phoenix_live_view, "~> 0.13.3"},
       {:icp_das, github: "kf8a/icp_das"},
+      {:licor, github: "kf8a/licor"},
       {:bamboo, "~> 1.3"},
       {:bamboo_smtp, "~> 2.0"}
     ]

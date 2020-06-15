@@ -4,6 +4,7 @@ defmodule RelayUi.Relay do
   """
 
   @topic inspect(__MODULE__)
+  @testing Application.get_env(:relay_ui, :testing)
 
   use GenServer
 
@@ -65,8 +66,11 @@ defmodule RelayUi.Relay do
     # look up the relay id
     {relay, _state} = get_in(state[:chambers], path)
 
-    IcpDas.on(state[:icp], Integer.to_string(relay))
-    new_chambers = update_in(state[:chambers], path, fn {key, _value} -> {key, :on} end)
+    if (@testing == false) do
+      IcpDas.on(state[:icp], Integer.to_string(relay))
+    end
+    new_chambers = update_in(state[:chambers], path, fn({key, _value}) -> {key, :on} end)
+    Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], new_chambers})
 
     Phoenix.PubSub.broadcast(
       RelayUi.PubSub,
@@ -81,14 +85,11 @@ defmodule RelayUi.Relay do
     # look up the relay id
     {relay, _state} = get_in(state[:chambers], path)
 
-    IcpDas.off(state[:icp], Integer.to_string(relay))
-    new_chambers = update_in(state[:chambers], path, fn {key, _value} -> {key, :off} end)
-
-    Phoenix.PubSub.broadcast(
-      RelayUi.PubSub,
-      @topic,
-      {__MODULE__, [:relay, :change], new_chambers}
-    )
+    if (@testing == false) do
+      IcpDas.off(state[:icp], Integer.to_string(relay))
+    end
+    new_chambers = update_in(state[:chambers], path, fn({key, _value}) -> {key, :off} end)
+    Phoenix.PubSub.broadcast(RelayUi.PubSub, @topic, {__MODULE__, [:relay, :change], new_chambers})
 
     {:noreply, Map.put(state, :chambers, new_chambers)}
   end
@@ -114,6 +115,9 @@ defmodule RelayUi.Relay do
   end
 
   defp relay_status(relay, icp) do
-    IcpDas.state(icp, Integer.to_string(relay))
+    if (@testing == false) do
+      IcpDas.state(icp, Integer.to_string(relay))
+    end
+    :off
   end
 end
