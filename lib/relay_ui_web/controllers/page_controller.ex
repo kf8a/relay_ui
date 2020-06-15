@@ -17,6 +17,7 @@ defmodule RelayUiWeb.PageController do
   end
 
   defp authenticate(conn) do
+    # TODO: pull the authentication into a router pipeline
     case AuthHelper.logged_in?(conn) do
       true ->
         conn

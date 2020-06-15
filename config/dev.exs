@@ -2,10 +2,7 @@ use Mix.Config
 
 # Configure your database
 config :relay_ui, RelayUi.Repo,
-  username: "pi",
-  password: "postgres",
   database: "relay_ui_dev",
-  hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
