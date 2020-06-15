@@ -1,15 +1,16 @@
 const path = require('path');
 const glob = require('glob');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+
 
 module.exports = (env, options) => ({
   optimization: {
     minimizer: [
-      new TerserPlugin()],
-      new OptimizeCSSAssetsPlugin({})
+      new TerserPlugin()
+//      new OptimizeCSSAssetsPlugin({}),
     ]
   },
   entry: {
@@ -36,6 +37,10 @@ module.exports = (env, options) => ({
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: '../css/app.css' }),
-    new CopyWebpackPlugin([{ from: 'static/', to: '../' }])
-  ]
+    new CopyWebpackPlugin({ 
+	    patterns: [
+		    { from: 'static/', to: '../' },
+	    ],
+    }),
+  ],
 });
